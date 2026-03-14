@@ -1,0 +1,45 @@
+name: Render Quarto PDF
+
+on:
+  push:
+    paths:
+      - '**.qmd'
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: "1.7.8"
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Setup Quarto with TinyTeX
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          tinytex: true
+
+      - name: Install Python dependencies
+        run: |
+          pip install --upgrade pip
+          pip install matplotlib jupyter pyyaml pandas numpy
+          pip install -U git+https://github.com/jgreathouse9/mlsynth.git
+
+      - name: Render PDF
+        run: quarto render scatter.qmd --to pdf
+
+      - name: Commit rendered PDF
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Add rendered scatter.pdf [skip ci]"
+          file_pattern: scatter.pdf
+          branch: main
