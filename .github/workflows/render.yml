@@ -35,11 +35,11 @@ jobs:
           pip install -U git+https://github.com/jgreathouse9/mlsynth.git
 
       - name: Render PDF
-        run: quarto render scatter.qmd --to pdf
+        run: quarto render analysis.Rmd --to pdf
 
       - name: Commit rendered PDF
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Add rendered scatter.pdf [skip ci]"
-          file_pattern: scatter.pdf
+          file_pattern: analysis.pdf
           branch: main
