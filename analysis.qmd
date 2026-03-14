@@ -36,12 +36,12 @@ pre_periods = Results[3].raw_results['Fit']['Pre-Periods']
 
 split_date = "2005-08"
 pre_index = pd.date_range(
-    end=pd.Period(split_date, freq="ME").start_time - pd.offsets.MonthEnd(1),
+    end=pd.Period(split_date, freq="M").start_time - pd.offsets.MonthEnd(1),
     periods=pre_periods,
     freq="ME"
 )
 post_index = pd.date_range(
-    start=pd.Period(split_date, freq="ME").start_time,
+    start=pd.Period(split_date, freq="M").start_time,
     periods=post_periods,
     freq="ME"
 )
