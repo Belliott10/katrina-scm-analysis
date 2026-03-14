@@ -1,0 +1,58 @@
+```{python}
+#| label: fig-observed
+#| fig-cap: "Observed vs Synthetic Control"
+#| fig-width: 10
+#| fig-height: 6
+
+import pandas as pd
+import numpy as np
+from mlsynth import TSSC
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("Total_Non_Farm_Employment_Katrina_2025.csv")
+
+config = {
+    "df": df,
+    "outcome": "YoY_NFE",
+    "treat": "Katrina",
+    "unitid": "MSA Title",
+    "time": "time",
+    "display_graphs": False,
+    "save": False,
+    "counterfactual_color": ["red", "blue"]
+}
+
+Results = TSSC(config).fit()
+y_obs = Results[3].raw_results['Vectors']['Observed Unit']
+y_cf = Results[3].raw_results['Vectors']['Counterfactual']
+post_periods = Results[3].raw_results['Fit']['Post-Periods']
+pre_periods = Results[3].raw_results['Fit']['Pre-Periods']
+
+split_date = "2005-08"
+pre_index = pd.date_range(
+    end=pd.Period(split_date, freq="M").start_time - pd.offsets.MonthEnd(1),
+    periods=pre_periods,
+    freq="M"
+)
+post_index = pd.date_range(
+    start=pd.Period(split_date, freq="M").start_time,
+    periods=post_periods,
+    freq="M"
+)
+full_index = pre_index.append(post_index)
+
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.plot(full_index, y_obs, label="New Orleans-Metairie, LA MSA (Observed)", linewidth=2.5, color='black')
+ax.plot(full_index, y_cf, label="Synthetic Control MSC(c) (Recommended)", linewidth=2.5, color='red')
+ax.axvline(x=pd.to_datetime(split_date), color="gray", linestyle=":", linewidth=2, 
+           label="Hurricane Katrina (Aug 2005)")
+ax.set_xlabel("Date", fontsize=11)
+ax.set_ylabel("Year-over-Year Employment Growth (%)", fontsize=11)
+ax.legend(fontsize=10)
+ax.grid(alpha=0.3)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+plt.title("Causal Impact on YoY_NFE", fontsize=16, weight="bold")
+plt.tight_layout()
+plt.show()
+```
