@@ -35,7 +35,7 @@ jobs:
           pip install -U git+https://github.com/jgreathouse9/mlsynth.git
 
       - name: Render PDF
-        run: quarto render analysis.Rmd --to pdf
+        run: quarto render analysis.qmd --to pdf
 
       - name: Commit rendered PDF
         uses: stefanzweifel/git-auto-commit-action@v5
