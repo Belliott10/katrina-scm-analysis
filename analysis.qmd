@@ -201,12 +201,12 @@ split_date = "2005-08"
 pre_index = pd.date_range(
     end=pd.Period(split_date, freq="M").start_time - pd.offsets.MonthEnd(1),
     periods=pre_periods,
-    freq="M"
+    freq="ME"
 )
 post_index = pd.date_range(
     start=pd.Period(split_date, freq="M").start_time,
     periods=post_periods,
-    freq="M"
+    freq="ME"
 )
 full_index = pre_index.append(post_index)
 
@@ -353,13 +353,13 @@ split_date = "2005-08"
 pre_index_levels = pd.date_range(
     end=pd.Period(split_date, freq="M").start_time - pd.offsets.MonthEnd(1),
     periods=pre_periods_levels,
-    freq="M"
+    freq="ME"
 )
 
 post_index_levels = pd.date_range(
     start=pd.Period(split_date, freq="M").start_time,
     periods=post_periods_levels,
-    freq="M"
+    freq="ME"
 )
 
 full_index_levels = pre_index_levels.append(post_index_levels)
@@ -402,11 +402,24 @@ all_msas = df['MSA Title'].unique()
 
 treated_unit = "New Orleans-Metairie, LA MSA"
 
-donor_msas = [msa for msa in all_msas if msa != treated_unit] [:30]
+# Comparable MSAs from your dataset (confirmed from the CSV)
+
+donor_msas = [
+"Charlotte, NC-SC MSA",
+"Little Rock, AR MSA",
+"Louisville/Jefferson County, KY-IN MSA",
+"Memphis, TN-MS-AR MSA",
+"Nashville, TN MSA",
+"Oklahoma City, OK MSA",
+"Raleigh, NC MSA",
+"Tulsa, OK MSA"
+]
 
 placebo_atts = []
 
-for placebo_msa in donor_msas:
+for i, placebo_msa in enumerate(donor_msas):
+
+    print(f"Running placebo {i+1}/{len(donor_msas)} : {placebo_msa}")
 
     df_placebo = df.copy()
 
@@ -437,9 +450,10 @@ for placebo_msa in donor_msas:
 
         placebo_atts.append(placebo_att)
 
-    except:
-        continue
+    except Exception as e:
 
+        print("Failed for:", placebo_msa)
+        print(e)
 
 placebo_atts = np.array(placebo_atts)
 
@@ -449,10 +463,13 @@ more_extreme = np.sum(np.abs(placebo_atts) >= np.abs(actual_att))
 
 p_value = (more_extreme + 1) / (len(placebo_atts) + 1)
 
+print("\nActual New Orleans ATT:", actual_att)
+print("Permutation p-value:", p_value)
+
 fig, ax = plt.subplots(figsize=(10,6))
 
 ax.hist(placebo_atts,
-        bins=20,
+        bins=8,
         color='lightgray',
         edgecolor='black',
         alpha=0.8)
@@ -578,14 +595,14 @@ split_date = "2005-08"
 pre_index = pd.date_range(
     end=pd.Period(split_date, freq="M").start_time - pd.offsets.MonthEnd(1),
     periods=pre_periods,
-    freq="M"
+    freq="ME"
 )
 
 # Create the post-treatment date range (including August 2005)
 post_index = pd.date_range(
     start=pd.Period(split_date, freq="M").start_time,
     periods=post_periods,
-    freq="M"
+    freq="ME"
 )
 
 # Combine them
