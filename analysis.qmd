@@ -61,4 +61,258 @@ ax.spines['right'].set_visible(False)
 plt.title("Causal Impact on YoY_NFE", fontsize=16, weight="bold")
 plt.tight_layout()
 plt.show()
+
+
+# --- Plot the treatment effect (the gap) ---
+gap = y_obs - y_cf
+
+fig2, ax = plt.subplots(figsize=(10, 6))
+ax.plot(full_index, gap, color="black", linewidth=2.5, label="Treatment Effect (Observed − Synthetic)")
+ax.axhline(0, color="red", linestyle="--", linewidth=1.5, alpha=0.7)
+ax.axvline(x=pd.to_datetime(split_date), color="gray", linestyle=":", linewidth=2,
+           label="Hurricane Katrina (Aug 2005)")
+ax.set_xlabel("Date", fontsize=11)
+ax.set_ylabel("Gap (Percentage Points)", fontsize=11)
+ax.legend(fontsize=10)
+ax.grid(alpha=0.3)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+
+# FIX: Convert to scalar
+peak_idx = np.argmin(gap)
+peak_value = float(gap[peak_idx])  # Converted to float
+peak_date = full_index[peak_idx].to_pydatetime()
+
+plt.title("Estimated Treatment Effect — Hurricane Katrina", fontsize=16)
+plt.tight_layout()
+plt.show()
+
+## Python code generating the in-time placebo figure
+
+df_placebo = pd.read_csv("/Users/bukolaelliott/PycharmProjects/PythonProject/Total_Non_Farm_Employment_Katrina_2025.csv")
+df_placebo["date"] = pd.to_datetime(df_placebo["date"])
+
+# To define the placebo treatment date and the treated unit
+placebo_date = "2003-08-31"
+treated_unit = "New Orleans-Metairie, LA MSA"
+
+# Create the placebo treatment variable
+df_placebo["Katrina"] = np.where(
+    (df_placebo["MSA Title"] == treated_unit) & (df_placebo["date"] >= placebo_date),
+    1, 0
+)
+
+# Shared config
+config_placebo = {
+    "df": df_placebo,
+    "outcome": "YoY_NFE",
+    "treat": "Katrina",
+    "unitid": "MSA Title",
+    "time": "time",
+    "display_graphs": True,
+    "save": False,
+}
+Results_placebo = TSSC(config_placebo).fit()
+
+y_cf_placebo = Results_placebo[3].raw_results['Vectors']['Counterfactual']
+
+fig3, ax = plt.subplots(figsize=(10, 6))
+ax.plot(full_index, y_obs, color="black", linewidth=2.5, label="Observed (New Orleans)")
+ax.plot(full_index, y_cf_placebo, color="red", linestyle="--", linewidth=2.5,
+        label="Synthetic Control (Placebo)")
+ax.axvline(x=pd.to_datetime("2003-08"), color="blue", linestyle="--", linewidth=2,
+           label="Placebo Treatment (Aug 2003)")
+ax.axvline(x=pd.to_datetime(split_date), color="gray", linestyle=":", linewidth=2,
+           label="Actual Hurricane (Aug 2005)")
+ax.set_xlabel("Date", fontsize=11)
+ax.set_ylabel("Year-over-Year Employment Growth (%)", fontsize=11)
+ax.legend(fontsize=9, loc='best')
+ax.grid(alpha=0.3)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+plt.title("Causal Impact on YoY_NFE", fontsize=16, weight="bold")
+plt.tight_layout()
+plt.show()
+
+
+## Python script for naive comparison (New Orleans vs donor mean)
+from mlsynth.utils.helperutils import sc_diagplot
+
+config_diagplot = {
+    "df": df,
+    "outcome": "YoY_NFE",
+    "treat": "Katrina",
+    "unitid": "MSA Title",
+    "time": "time",
+    "display_graphs": True,
+    "save": False,
+}
+sc_diagplot([config_diagplot])
+
+
+## Python code for pre-treatment validation figure
+pre_gap = gap[:pre_periods]
+pre_dates = full_index[:pre_periods]
+
+fig4, ax = plt.subplots(figsize=(10, 6))
+ax.plot(pre_dates, pre_gap, color="black", linewidth=2.5, label="Gap (Pre-Treatment)")
+ax.axhline(0, color="red", linestyle="--", linewidth=1.5, alpha=0.7)
+ax.set_xlabel("Date", fontsize=11)
+ax.set_ylabel("Gap (Percentage Points)", fontsize=11)
+ax.set_title("Pre-Treatment Fit Validation (1990-2005)", fontsize=13, fontweight='bold')
+ax.legend(fontsize=10)
+ax.grid(alpha=0.3)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+plt.tight_layout()
+plt.show()
+
+
+# IN-SPACE PLACEBO TEST
+
+
+all_msas = df['MSA Title'].unique()
+
+treated_unit = "New Orleans-Metairie, LA MSA"
+
+donor_msas = [msa for msa in all_msas if msa != treated_unit]
+
+placebo_atts = []
+
+for placebo_msa in donor_msas:
+
+    df_placebo = df.copy()
+
+    df_placebo["Katrina"] = 0
+
+    mask = (
+        (df_placebo["MSA Title"] == placebo_msa) &
+        (df_placebo["date"] >= "2005-08-01")
+    )
+
+    df_placebo.loc[mask, "Katrina"] = 1
+
+    config_placebo = {
+        "df": df_placebo,
+        "outcome": "YoY_NFE",
+        "treat": "Katrina",
+        "unitid": "MSA Title",
+        "time": "time",
+        "display_graphs": False,
+        "save": False
+    }
+
+    try:
+
+        Results_placebo = TSSC(config_placebo).fit()
+
+        placebo_att = Results_placebo[0].att
+
+        placebo_atts.append(placebo_att)
+
+    except:
+        continue
+
+
+placebo_atts = np.array(placebo_atts)
+
+actual_att = Results[0].att
+
+
+print("\nPlacebo Results Summary")
+
+print("Number of placebo MSAs:", len(placebo_atts))
+print("Mean placebo ATT:", np.mean(placebo_atts))
+print("Std placebo ATT:", np.std(placebo_atts))
+
+more_extreme = np.sum(np.abs(placebo_atts) >= np.abs(actual_att))
+
+p_value = (more_extreme + 1) / (len(placebo_atts) + 1)
+
+print("\nActual New Orleans ATT:", actual_att)
+print("Permutation p-value:", p_value)
+
+fig, ax = plt.subplots(figsize=(10,6))
+
+ax.hist(placebo_atts,
+        bins=20,
+        color='lightgray',
+        edgecolor='black',
+        alpha=0.8)
+
+ax.axvline(actual_att,
+           color='red',
+           linewidth=3,
+           linestyle='--',
+           label="New Orleans ATT")
+
+ax.set_xlabel("ATT (percentage points)")
+ax.set_ylabel("Frequency")
+ax.set_title("In-Space Placebo Distribution")
+
+ax.legend()
+
+plt.tight_layout()
+plt.show()
+
+
+
+# SYNTHETIC CONTROL USING TOTAL NONFARM EMPLOYMENT LEVELS
+
+config_levels = {
+    "df": df,
+    "outcome": "Total NonFarm Employment in 1000s",
+    "treat": "Katrina",
+    "unitid": "MSA Title",
+    "time": "time",
+    "display_graphs": False,
+    "save": False,
+}
+
+Results_levels = TSSC(config_levels).fit()
+
+y_obs_levels = Results_levels[3].raw_results['Vectors']['Observed Unit']
+y_cf_levels = Results_levels[3].raw_results['Vectors']['Counterfactual']
+
+post_periods_levels = Results_levels[3].raw_results['Fit']['Post-Periods']
+pre_periods_levels = Results_levels[3].raw_results['Fit']['Pre-Periods']
+
+split_date = "2005-08"
+
+pre_index_levels = pd.date_range(
+    end=pd.Period(split_date, freq="M").start_time - pd.offsets.MonthEnd(1),
+    periods=pre_periods_levels,
+    freq="M"
+)
+
+post_index_levels = pd.date_range(
+    start=pd.Period(split_date, freq="M").start_time,
+    periods=post_periods_levels,
+    freq="M"
+)
+
+full_index_levels = pre_index_levels.append(post_index_levels)
+
+fig_levels, ax = plt.subplots(figsize=(10,6))
+
+ax.plot(full_index_levels, y_obs_levels,
+        label="New Orleans-Metairie, LA MSA (Observed)",
+        linewidth=2.5, color='black')
+
+ax.plot(full_index_levels, y_cf_levels,
+        label="Synthetic Control",
+        linewidth=2.5, color='red')
+
+ax.axvline(x=pd.to_datetime(split_date), color="gray",
+           linestyle=":", linewidth=2,
+           label="Hurricane Katrina (Aug 2005)")
+
+ax.set_xlabel("Date")
+ax.set_ylabel("Total Nonfarm Employment (Thousands)")
+ax.legend()
+ax.grid(alpha=0.3)
+
+plt.title("Total Nonfarm Employment: Observed vs Synthetic Control", fontsize=16)
+plt.tight_layout()
+plt.show()
 ```
