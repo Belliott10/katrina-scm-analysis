@@ -7,6 +7,9 @@ format:
     geometry: margin=1in
     linestretch: 2.0
     pdf-engine: xelatex
+    toc: true
+    toc-depth: 3
+    number-sections: true
     keep-tex: true
 
 header-includes: |
@@ -401,7 +404,7 @@ treated_msa = "New Orleans-Metairie, LA MSA"
 donor_msas = [m for m in all_msas if m != treated_msa]
 
 np.random.seed(42)
-n_placebos = min(40, len(donor_msas))
+n_placebos = min(10, len(donor_msas))
 placebo_units = np.random.choice(donor_msas, size=n_placebos, replace=False)
 
 placebo_gaps = []
