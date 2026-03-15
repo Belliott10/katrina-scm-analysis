@@ -254,14 +254,11 @@ ax.spines['right'].set_visible(False)
 # FIX: Convert to scalar
 peak_idx = np.argmin(gap)
 peak_value = float(gap[peak_idx])  # Convert to Python float
-peak_date = full_index[peak_idx]
+# Use .item() to pull the raw number out of the array
+peak_value = float(np.array(gap)[peak_idx].item())
 
-ax.annotate(f'Peak: {peak_value:.1f}pp', 
-            xy=(peak_date, peak_value),
-            xytext=(peak_date, peak_value - 8),
-            fontsize=9, ha='center',
-            bbox=dict(boxstyle='round,pad=0.5', facecolor='yellow', alpha=0.3),
-            arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=0'))
+# Convert the date to a standard format for the PDF plot
+peak_date = full_index[peak_idx].to_pydatetime()
 
 plt.title("Estimated Treatment Effect — Hurricane Katrina", fontsize=16)
 plt.tight_layout()
