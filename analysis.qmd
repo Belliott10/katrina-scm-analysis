@@ -269,57 +269,6 @@ plt.show()
 \newpage
 
 ```{python}
-#| label: fig-placebo
-#| fig-cap: "In-Time Placebo Test"
-#| fig-width: 10
-#| fig-height: 6
-
-df_placebo = pd.read_csv("Total_Non_Farm_Employment_Katrina_2025.csv")
-df_placebo["date"] = pd.to_datetime(df_placebo["date"])
-
-placebo_date = "2003-08-31"
-treated_unit = "New Orleans-Metairie, LA MSA"
-df_placebo["Katrina"] = np.where(
-    (df_placebo["MSA Title"] == treated_unit) & (df_placebo["date"] >= placebo_date),
-    1, 0
-)
-
-config_placebo = {
-    "df": df_placebo,
-    "outcome": "YoY_NFE",
-    "treat": "Katrina",
-    "unitid": "MSA Title",
-    "time": "time",
-    "display_graphs": False,
-    "save": False,
-}
-Results_placebo = TSSC(config_placebo).fit()
-y_cf_placebo = Results_placebo[3].raw_results['Vectors']['Counterfactual']
-
-fig, ax = plt.subplots(figsize=(10, 6))
-ax.plot(full_index, y_obs, color="black", linewidth=2.5, label="Observed (New Orleans)")
-ax.plot(full_index, y_cf_placebo, color="red", linestyle="--", linewidth=2.5, 
-        label="Synthetic Control (Placebo)")
-ax.axvline(x=pd.to_datetime("2003-08"), color="blue", linestyle="--", linewidth=2, 
-           label="Placebo Treatment (Aug 2003)")
-ax.axvline(x=pd.to_datetime(split_date), color="gray", linestyle=":", linewidth=2, 
-           label="Actual Hurricane (Aug 2005)")
-ax.set_xlabel("Date", fontsize=11)
-ax.set_ylabel("Year-over-Year Employment Growth (%)", fontsize=11)
-ax.legend(fontsize=9, loc='best')
-ax.grid(alpha=0.3)
-ax.spines['top'].set_visible(False)
-ax.spines['right'].set_visible(False)
-plt.title("Causal Impact on YoY_NFE", fontsize=16, weight="bold")
-plt.tight_layout()
-plt.show()
-```
-
-*Note: Validation test with placebo treatment placed in 2003 (dashed vertical line). Gap shows no systematic collapse at placebo timing, with catastrophic impact appearing only at actual hurricane time in 2005.*
-
-\newpage
-
-```{python}
 #| label: fig-observed-2
 #| fig-cap: "Observed vs Synthetic employment rate"
 #| fig-width: 10
@@ -384,8 +333,150 @@ plt.title("Total Nonfarm Employment: Observed vs Synthetic Control", fontsize=16
 plt.tight_layout()
 plt.show()
 ```
+\newpage
+
+```{python}
+#| label: fig-placebo
+#| fig-cap: "In-Time Placebo Test"
+#| fig-width: 10
+#| fig-height: 6
+
+df_placebo = pd.read_csv("Total_Non_Farm_Employment_Katrina_2025.csv")
+df_placebo["date"] = pd.to_datetime(df_placebo["date"])
+
+placebo_date = "2003-08-31"
+treated_unit = "New Orleans-Metairie, LA MSA"
+df_placebo["Katrina"] = np.where(
+    (df_placebo["MSA Title"] == treated_unit) & (df_placebo["date"] >= placebo_date),
+    1, 0
+)
+
+config_placebo = {
+    "df": df_placebo,
+    "outcome": "YoY_NFE",
+    "treat": "Katrina",
+    "unitid": "MSA Title",
+    "time": "time",
+    "display_graphs": False,
+    "save": False,
+}
+Results_placebo = TSSC(config_placebo).fit()
+y_cf_placebo = Results_placebo[3].raw_results['Vectors']['Counterfactual']
+
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.plot(full_index, y_obs, color="black", linewidth=2.5, label="Observed (New Orleans)")
+ax.plot(full_index, y_cf_placebo, color="red", linestyle="--", linewidth=2.5, 
+        label="Synthetic Control (Placebo)")
+ax.axvline(x=pd.to_datetime("2003-08"), color="blue", linestyle="--", linewidth=2, 
+           label="Placebo Treatment (Aug 2003)")
+ax.axvline(x=pd.to_datetime(split_date), color="gray", linestyle=":", linewidth=2, 
+           label="Actual Hurricane (Aug 2005)")
+ax.set_xlabel("Date", fontsize=11)
+ax.set_ylabel("Year-over-Year Employment Growth (%)", fontsize=11)
+ax.legend(fontsize=9, loc='best')
+ax.grid(alpha=0.3)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+plt.title("Causal Impact on YoY_NFE", fontsize=16, weight="bold")
+plt.tight_layout()
+plt.show()
+```
+
+*Note: Validation test with placebo treatment placed in 2003 (dashed vertical line). Gap shows no systematic collapse at placebo timing, with catastrophic impact appearing only at actual hurricane time in 2005.*
 
 \newpage
+
+```{python}
+#| label: fig-inspace-placebo
+#| fig-cap: "In-Space Placebo Test"
+#| fig-width: 11
+#| fig-height: 7
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+all_msas = df["MSA Title"].unique()
+treated_msa = "New Orleans-Metairie, LA MSA"
+
+donor_msas = [m for m in all_msas if m != treated_msa]
+
+np.random.seed(42)
+n_placebos = min(40, len(donor_msas))
+placebo_units = np.random.choice(donor_msas, size=n_placebos, replace=False)
+
+placebo_gaps = []
+placebo_atts = []
+
+for msa in placebo_units:
+
+    df_placebo = df.copy()
+    df_placebo["Katrina"] = 0
+
+    mask = (
+        (df_placebo["MSA Title"] == msa) &
+        (df_placebo["date"] >= "2005-08-01")
+    )
+
+    df_placebo.loc[mask, "Katrina"] = 1
+
+    config_placebo = {
+        "df": df_placebo,
+        "outcome": "YoY_NFE",
+        "treat": "Katrina",
+        "unitid": "MSA Title",
+        "time": "time",
+        "display_graphs": False,
+        "save": False
+    }
+
+    try:
+
+        Results_placebo = TSSC(config_placebo).fit()
+
+        y_obs_p = Results_placebo[3].raw_results["Vectors"]["Observed Unit"]
+        y_cf_p = Results_placebo[3].raw_results["Vectors"]["Counterfactual"]
+
+        post_p = Results_placebo[3].raw_results["Fit"]["Post-Periods"]
+
+        gap_p = y_obs_p - y_cf_p
+        placebo_gaps.append(gap_p)
+
+        placebo_att = np.mean(gap_p[-post_p:])
+        placebo_atts.append(placebo_att)
+
+    except:
+        continue
+
+
+fig, ax = plt.subplots(figsize=(11,7))
+
+for g in placebo_gaps:
+    ax.plot(full_index, g, color="lightgray", linewidth=0.9, alpha=0.5)
+
+ax.plot(full_index, gap, color="black", linewidth=3,
+        label="New Orleans Treatment Effect")
+
+ax.axhline(0, color="red", linestyle="--", linewidth=1.5,
+           label="No Effect")
+
+ax.axvline(x=pd.to_datetime("2005-08"), color="gray", linestyle=":",
+           linewidth=2, label="Hurricane Katrina (Aug 2005)")
+
+ax.set_xlabel("Date")
+ax.set_ylabel("Employment Growth Gap (Percentage Points)")
+ax.set_title("In-Space Placebo Test")
+
+ax.legend()
+ax.grid(alpha=0.3)
+
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+
+plt.tight_layout()
+plt.show()
+```
+\newpage
+
 
 # Appendix A: Figures {.unnumbered}
 \renewcommand{\thefigure}{A.\arabic{figure}}
