@@ -1,6 +1,10 @@
 ---
 title: "Katrina Analysis"
 format: pdf
+execute:
+  echo: false
+  warning: false
+jupyter: python3
 ---
 
 
@@ -15,8 +19,10 @@ import numpy as np
 from mlsynth import TSSC
 import matplotlib.pyplot as plt
 
+# 1. LOAD DATA
 df = pd.read_csv("Total_Non_Farm_Employment_Katrina_2025.csv")
 
+# 2. MAIN ANALYSIS
 config = {
     "df": df,
     "outcome": "YoY_NFE",
@@ -47,6 +53,7 @@ post_index = pd.date_range(
 )
 full_index = pre_index.append(post_index)
 
+# PLOT 1: Observed vs Synthetic
 fig, ax = plt.subplots(figsize=(10, 6))
 ax.plot(full_index, y_obs, label="New Orleans-Metairie, LA MSA (Observed)", linewidth=2.5, color='black')
 ax.plot(full_index, y_cf, label="Synthetic Control MSC(c) (Recommended)", linewidth=2.5, color='red')
@@ -80,7 +87,7 @@ ax.spines['right'].set_visible(False)
 
 # FIX: Convert to scalar
 peak_idx = np.argmin(gap)
-peak_value = float(gap[peak_idx])  # Converted to float
+peak_value = float(np.array(gap)[peak_idx].item())  # Converted to float
 peak_date = full_index[peak_idx].to_pydatetime()
 
 plt.title("Estimated Treatment Effect — Hurricane Katrina", fontsize=16)
@@ -89,7 +96,7 @@ plt.show()
 
 ## Python code generating the in-time placebo figure
 
-df_placebo = pd.read_csv("/Users/bukolaelliott/PycharmProjects/PythonProject/Total_Non_Farm_Employment_Katrina_2025.csv")
+df_placebo = pd.read_csv("Total_Non_Farm_Employment_Katrina.csv")
 df_placebo["date"] = pd.to_datetime(df_placebo["date"])
 
 # To define the placebo treatment date and the treated unit
