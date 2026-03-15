@@ -383,7 +383,7 @@ ax.grid(alpha=0.3)
 plt.title("Total Nonfarm Employment: Observed vs Synthetic Control", fontsize=16)
 plt.tight_layout()
 plt.show()
-,,,
+```
 
 \newpage
 
@@ -486,6 +486,7 @@ ax.legend()
 plt.tight_layout()
 plt.show()
 ```
+
 \newpage
 
 # Appendix A: Figures {.unnumbered}
