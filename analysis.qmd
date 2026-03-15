@@ -253,7 +253,7 @@ ax.spines['right'].set_visible(False)
 
 # FIX: Convert to scalar
 peak_idx = np.argmin(gap)
-peak_value = float(gap[peak_idx])  # Convert to Python float
+  # Convert to Python float
 # Use .item() to pull the raw number out of the array
 peak_value = float(np.array(gap)[peak_idx].item())
 
@@ -320,7 +320,7 @@ plt.show()
 \newpage
 
 ```{python}
-#| label: fig-observed
+#| label: fig-observed-2
 #| fig-cap: "Observed vs Synthetic employment rate"
 #| fig-width: 10
 #| fig-height: 6
