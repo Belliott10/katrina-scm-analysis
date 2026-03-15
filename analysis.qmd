@@ -96,7 +96,7 @@ plt.show()
 
 ## Python code generating the in-time placebo figure
 
-df_placebo = pd.read_csv("Total_Non_Farm_Employment_Katrina.csv")
+df_placebo = pd.read_csv("Total_Non_Farm_Employment_Katrina_2025.csv")
 df_placebo["date"] = pd.to_datetime(df_placebo["date"])
 
 # To define the placebo treatment date and the treated unit
