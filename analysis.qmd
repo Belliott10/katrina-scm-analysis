@@ -540,95 +540,8 @@ plt.show()
 
 \newpage
 
-```{python}
-#| label: fig-inspace-placebo
-#| fig-cap: "In-Space Placebo Test"
-#| fig-width: 11
-#| fig-height: 7
+![In-Space Placebo Test](In_Space_Placebo_SPAGHETTI_PLOT.png){width=100%}
 
-import numpy as np
-import matplotlib.pyplot as plt
-
-all_msas = df["MSA Title"].unique()
-treated_msa = "New Orleans-Metairie, LA MSA"
-
-donor_msas = [m for m in all_msas if m != treated_msa]
-
-np.random.seed(42)
-n_placebos = min(10, len(donor_msas))
-placebo_units = np.random.choice(donor_msas, size=n_placebos, replace=False)
-
-placebo_gaps = []
-placebo_atts = []
-
-for msa in placebo_units:
-
-    df_placebo = df.copy()
-    df_placebo["Katrina"] = 0
-
-    mask = (
-        (df_placebo["MSA Title"] == msa) &
-        (df_placebo["date"] >= "2005-08-01")
-    )
-
-    df_placebo.loc[mask, "Katrina"] = 1
-
-    config_placebo = {
-        "df": df_placebo,
-        "outcome": "YoY_NFE",
-        "treat": "Katrina",
-        "unitid": "MSA Title",
-        "time": "time",
-        "display_graphs": False,
-        "save": False
-    }
-
-    try:
-
-        Results_placebo = TSSC(config_placebo).fit()
-
-        y_obs_p = Results_placebo[3].raw_results["Vectors"]["Observed Unit"]
-        y_cf_p = Results_placebo[3].raw_results["Vectors"]["Counterfactual"]
-
-        post_p = Results_placebo[3].raw_results["Fit"]["Post-Periods"]
-
-        gap_p = y_obs_p - y_cf_p
-        placebo_gaps.append(gap_p)
-
-        placebo_att = np.mean(gap_p[-post_p:])
-        placebo_atts.append(placebo_att)
-
-    except:
-        continue
-
-
-fig, ax = plt.subplots(figsize=(11,7))
-
-for g in placebo_gaps:
-    ax.plot(full_index, g, color="lightgray", linewidth=0.9, alpha=0.5)
-
-ax.plot(full_index, gap, color="black", linewidth=3,
-        label="New Orleans Treatment Effect")
-
-ax.axhline(0, color="red", linestyle="--", linewidth=1.5,
-           label="No Effect")
-
-ax.axvline(x=pd.to_datetime("2005-08"), color="gray", linestyle=":",
-           linewidth=2, label="Hurricane Katrina (Aug 2005)")
-
-ax.set_xlabel("Date")
-ax.set_ylabel("Employment Growth Gap (Percentage Points)")
-ax.set_title("In-Space Placebo Test")
-
-ax.legend()
-ax.grid(alpha=0.3)
-
-ax.spines["top"].set_visible(False)
-ax.spines["right"].set_visible(False)
-
-plt.tight_layout()
-plt.show()
-```
 *Note: In-space placebo test comparing New Orleans (thick black line) to 30 randomly selected donor MSAs treated as placebo units (thin gray lines). Placebo gaps oscillate around zero with no systematic pattern. New Orleans shows clear catastrophic drop at Hurricane Katrina timing and gradual recovery, distinctly different from all placebo trajectories. Permutation p-value = 0.16, indicating New Orleans' effect is more extreme than 84% of placebo cases. Visual comparison provides strong qualitative validation of causal effect.*
 \newpage
 
@@ -866,6 +779,102 @@ plt.tight_layout()
 plt.show()
 ```
 
+
+```{python}
+#| echo: true
+#| eval: false
+#| wrap: true
+
+## Python code generating the in-space placebo figure
+
+#| label: fig-inspace-placebo
+#| fig-cap: "In-Space Placebo Test"
+#| fig-width: 11
+#| fig-height: 7
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+all_msas = df["MSA Title"].unique()
+treated_msa = "New Orleans-Metairie, LA MSA"
+
+donor_msas = [m for m in all_msas if m != treated_msa]
+
+np.random.seed(42)
+n_placebos = min(30, len(donor_msas))
+placebo_units = np.random.choice(donor_msas, size=n_placebos, replace=False)
+
+placebo_gaps = []
+placebo_atts = []
+
+for msa in placebo_units:
+
+    df_placebo = df.copy()
+    df_placebo["Katrina"] = 0
+
+    mask = (
+        (df_placebo["MSA Title"] == msa) &
+        (df_placebo["date"] >= "2005-08-01")
+    )
+
+    df_placebo.loc[mask, "Katrina"] = 1
+
+    config_placebo = {
+        "df": df_placebo,
+        "outcome": "YoY_NFE",
+        "treat": "Katrina",
+        "unitid": "MSA Title",
+        "time": "time",
+        "display_graphs": False,
+        "save": False
+    }
+
+    try:
+
+        Results_placebo = TSSC(config_placebo).fit()
+
+        y_obs_p = Results_placebo[3].raw_results["Vectors"]["Observed Unit"]
+        y_cf_p = Results_placebo[3].raw_results["Vectors"]["Counterfactual"]
+
+        post_p = Results_placebo[3].raw_results["Fit"]["Post-Periods"]
+
+        gap_p = y_obs_p - y_cf_p
+        placebo_gaps.append(gap_p)
+
+        placebo_att = np.mean(gap_p[-post_p:])
+        placebo_atts.append(placebo_att)
+
+    except:
+        continue
+
+
+fig, ax = plt.subplots(figsize=(11,7))
+
+for g in placebo_gaps:
+    ax.plot(full_index, g, color="lightgray", linewidth=0.9, alpha=0.5)
+
+ax.plot(full_index, gap, color="black", linewidth=3,
+        label="New Orleans Treatment Effect")
+
+ax.axhline(0, color="red", linestyle="--", linewidth=1.5,
+           label="No Effect")
+
+ax.axvline(x=pd.to_datetime("2005-08"), color="gray", linestyle=":",
+           linewidth=2, label="Hurricane Katrina (Aug 2005)")
+
+ax.set_xlabel("Date")
+ax.set_ylabel("Employment Growth Gap (Percentage Points)")
+ax.set_title("In-Space Placebo Test")
+
+ax.legend()
+ax.grid(alpha=0.3)
+
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+
+plt.tight_layout()
+plt.show()
+```
 
 # Appendix A: Figures {.unnumbered}
 
