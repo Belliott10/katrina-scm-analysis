@@ -45,42 +45,41 @@ execute:
  
 \begin{center}
  
-\vspace*{0.3cm}
+\vspace*{0.2cm}
  
-{\Large \textbf{The Economic Impact of Hurricane Katrina on Local Employment:}}\\[0.1cm]
-{\Large \textbf{A Synthetic Control Approach}}
+{\Large \textbf{The Economic Impact of Hurricane Katrina on Local Employment: A Synthetic Control Approach}}
  
-\vspace{0.8cm}
+\vspace{0.5cm}
  
 by
  
-\vspace{0.4cm}
+\vspace{0.3cm}
  
 {\large Bukola Elliott}
  
-\vspace{0.8cm}
+\vspace{0.5cm}
  
 An MA Paper submitted in partial fulfillment of the requirements for the Degree of \textbf{Master of Arts in Economics}
  
-\vspace{0.8cm}
+\vspace{0.5cm}
  
 Andrew Young School of Policy Studies\\
 Georgia State University\\
 Atlanta, GA
  
-\vspace{0.8cm}
+\vspace{0.5cm}
  
 Paper approved by:
  
-\vspace{0.4cm}
+\vspace{0.3cm}
  
 Advisor: \textbf{Dr. Jonathan Smith}
  
-\vspace{0.8cm}
+\vspace{0.5cm}
  
 This MA Paper is accepted and approved as partial fulfillment of the requirements for the Degree of Master of Arts in Economics, Andrew Young School of Policy Studies, Georgia State University this \underline{\hspace{1cm}} of \underline{\hspace{2cm}}, \underline{\hspace{1.5cm}}.
  
-\vspace{0.6cm}
+\vspace{0.4cm}
  
 \underline{\hspace{6cm}} Director of Master's Program
  
@@ -98,14 +97,15 @@ This MA Paper is accepted and approved as partial fulfillment of the requirement
 \pagenumbering{arabic}
  
 \begin{abstract}
+\setstretch{1.5}
 This paper examines the causal impact of Hurricane Katrina on employment in the New Orleans metropolitan area using the Two-Step Synthetic Control (TSSC) method. Hurricane Katrina, which struck the Gulf Coast in August 2005, was one of the most devastating natural disasters in modern U.S. history, causing widespread displacement and labor market disruptions. Using monthly employment data from 1991 to 2025, I construct a synthetic control from 146 unaffected metropolitan statistical areas that closely matches pre-Katrina New Orleans employment patterns. The TSSC algorithm selects the MSC(c) method as optimal based on pre-treatment fit. The analysis reveals catastrophic employment losses: an immediate 33\% year-over-year decline following the hurricane, with an average treatment effect of -0.84 percentage points over the full 20-year post-treatment period (2005-2025). The relatively small long-run average treatment effect compared to the catastrophic initial impact reflects substantial recovery of employment growth rates by the mid-2010s. However, employment levels analysis reveals incomplete recovery, with New Orleans employment remaining approximately 26\% below the counterfactual even in 2025. In-time and in-space placebo tests validate causality. This study contributes to disaster economics by analyzing aggregate MSA-level employment over an unprecedented 20-year post-disaster window, examining both growth rates and levels, and addressing potential confounds including the COVID-19 pandemic. Results indicate substantial but incomplete long-run recovery, with important implications for disaster recovery policy.
  
-\vspace{0.2cm}
+\vspace{0.15cm}
  
 \textit{Keywords:} Hurricane Katrina, natural disasters, synthetic control method, employment impacts, disaster recovery, New Orleans, long-run effects, Two-Step Synthetic Control
-
-\vspace{0.15cm}
-
+ 
+\vspace{0.1cm}
+ 
 \textit{JEL Codes:} Q54, R11, J21, C21
 \end{abstract}
  
