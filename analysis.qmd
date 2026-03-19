@@ -11,84 +11,80 @@ format:
     toc-depth: 3
     number-sections: true
     keep-tex: true
-
+ 
 header-includes: |
   \input{prelim.tex}
-
+  
   \usepackage{titlesec}
   \usepackage{hyperref}
-
+  
   % Section and Subsection Formatting
   \titleformat{\section}
     {\centering\Large\bfseries}
     {\thesection}{1em}{}
-
+ 
   \titleformat{\subsection}
     {\centering\large\bfseries}
     {\thesubsection}{1em}{}
-
+ 
   % Reduce Vertical Spacing
   \titlespacing{\section}{0pt}{0.8em}{0.5em}
   \titlespacing{\subsection}{0pt}{0.5em}{0.3em}
-
+ 
   % Paragraph Formatting
   \setlength{\parindent}{0pt}
   \setlength{\parskip}{0.5em}
-
+ 
 execute:
   echo: false
   warning: false
   message: false
 ---
-
-
-
+ 
 \pagenumbering{gobble}
  
 \begin{center}
  
-\vspace*{1cm}
+\vspace*{0.5cm}
  
-\begin{spacing}{1.5}
-{\Large \textbf{The Economic Impact of Hurricane Katrina on Local Employment:}}\\[0.2cm]
+{\Large \textbf{The Economic Impact of Hurricane Katrina on Local Employment:}}\\[0.1cm]
 {\Large \textbf{A Synthetic Control Approach}}
-\end{spacing}
- 
-\vspace{1.5cm}
- 
-by
  
 \vspace{1cm}
  
+by
+ 
+\vspace{0.5cm}
+ 
 {\large Bukola Elliott}
  
-\vspace{2cm}
+\vspace{1cm}
  
 An MA Paper submitted in partial fulfillment of the requirements
  
 for the Degree of \textbf{Master of Arts in Economics}
  
-\vspace{1.5cm}
+\vspace{1cm}
  
 Andrew Young School of Policy Studies\\
 Georgia State University\\
 Atlanta, GA
  
-\vspace{2cm}
+\vspace{1cm}
  
 Paper approved by:
  
-\vspace{1cm}
+\vspace{0.5cm}
  
 Advisor: \textbf{Dr. Jonathan Smith}
  
-\vspace{1.5cm}
+\vspace{1cm}
  
 This MA Paper is accepted and approved as partial fulfillment of the requirements for the Degree of Master of Arts in Economics, Andrew Young School of Policy Studies,
  
 Georgia State University this \underline{\hspace{1cm}} of \underline{\hspace{2cm}}, \underline{\hspace{1.5cm}}.
  
-\vspace{1.5cm}
+\vspace{0.8cm}
  
 \underline{\hspace{6cm}} Director of Master's Program
  
@@ -104,19 +100,20 @@ Georgia State University this \underline{\hspace{1cm}} of \underline{\hspace{2cm
 \newpage
  
 \pagenumbering{arabic}
-
-
+ 
 \begin{abstract}
 This paper examines the causal impact of Hurricane Katrina on employment in the New Orleans metropolitan area using the Two-Step Synthetic Control (TSSC) method. Hurricane Katrina, which struck the Gulf Coast in August 2005, was one of the most devastating natural disasters in modern U.S. history, causing widespread displacement and labor market disruptions. Using monthly employment data from 1991 to 2025, I construct a synthetic control from 146 unaffected metropolitan statistical areas that closely matches pre-Katrina New Orleans employment patterns. The TSSC algorithm selects the MSC(c) method as optimal based on pre-treatment fit. The analysis reveals catastrophic employment losses: an immediate 33\% year-over-year decline following the hurricane, with an average treatment effect of -0.84 percentage points over the full 20-year post-treatment period (2005-2025). The relatively small long-run average treatment effect compared to the catastrophic initial impact reflects substantial recovery of employment growth rates by the mid-2010s. However, employment levels analysis reveals incomplete recovery, with New Orleans employment remaining approximately 26\% below the counterfactual even in 2025. In-time and in-space placebo tests validate causality. This study contributes to disaster economics by analyzing aggregate MSA-level employment over an unprecedented 20-year post-disaster window, examining both growth rates and levels, and addressing potential confounds including the COVID-19 pandemic. Results indicate substantial but incomplete long-run recovery, with important implications for disaster recovery policy.
-
-\vspace{0.5cm}
- 
-\textbf{Keywords:} Hurricane Katrina, natural disasters, synthetic control method, employment impacts, disaster recovery, New Orleans, long-run effects, Two-Step Synthetic Control
  
 \vspace{0.3cm}
  
-\textbf{JEL Codes:} Q54, R11, J21, C21
+\textit{Keywords:} Hurricane Katrina, natural disasters, synthetic control method, employment impacts, disaster recovery, New Orleans, long-run effects, Two-Step Synthetic Control
+
+\vspace{0.2cm}
+ 
+\textit{JEL Codes:} Q54, R11, J21, C21
 \end{abstract}
+ 
+\newpage
 
 # Introduction
 On August 29, 2005, Hurricane Katrina made landfall on the Gulf Coast, unleashing catastrophic destruction across Louisiana, Mississippi, and Alabama. Hurricane Katrina caused catastrophic destruction in New Orleans; levee failures flooded much of the city and, within a week, New Orleans’ population fell from over 400,000 to near zero, with nearly half of those evacuees not having returned by mid-2007 (Vigdor, 2008). Beyond the immediate human toll, the hurricane precipitated one of the largest internal migration events in modern U.S. history and fundamentally disrupted the region's economic structure. This paper addresses a fundamental policy question: What was the causal impact of Hurricane Katrina on total non-farm employment in the New Orleans metropolitan area? Specifically, did employment in the region recover, stabilize, or suffer persistent losses relative to a counterfactual scenario where Katrina never occurred? 
