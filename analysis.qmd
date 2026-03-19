@@ -380,7 +380,6 @@ plt.show()
 
 *Note: Year-over-year percentage change in total non-farm employment. The black solid line shows actual employment for New Orleans–Metairie, LA MSA, while the red solid line shows the synthetic control using MSC(c) method. The vertical gray dotted line indicates the timing of Hurricane Katrina (August 2005).*
 
-
 \newpage
 
 ```{python}
