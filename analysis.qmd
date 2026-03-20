@@ -158,6 +158,9 @@ Third, policy endogeneity arises because the estimated effects reflect both the 
 
 # Results and Discussion
 
+## Preliminary Analysis
+Before presenting the synthetic control results, Figure 1 shows a naive comparison of New Orleans employment growth against the simple average of all 146 donor MSAs. The gray lines show individual donor trajectories, revealing substantial heterogeneity across metropolitan areas. The blue line represents the unweighted average of donors, which provides a poor counterfactual for New Orleans due to this heterogeneity. Some donor MSAs experienced strong growth while others stagnated, and simple averaging fails to account for New Orleans' specific pre-treatment characteristics. This motivates the synthetic control approach, which constructs an optimally-weighted combination of donors that closely matches New Orleans' pre-Katrina employment patterns.
+
 ```{python}
 #| echo: false
 #| output: false
@@ -204,10 +207,6 @@ full_index = pre_index.append(post_index)
 
 gap = y_obs - y_cf
 ```
-
-## Preliminary Analysis
-Before presenting the synthetic control results, Figure 1 shows a naive comparison of New Orleans employment growth against the simple average of all 146 donor MSAs. The gray lines show individual donor trajectories, revealing substantial heterogeneity across metropolitan areas. The blue line represents the unweighted average of donors, which provides a poor counterfactual for New Orleans due to this heterogeneity. Some donor MSAs experienced strong growth while others stagnated, and simple averaging fails to account for New Orleans' specific pre-treatment characteristics. This motivates the synthetic control approach, which constructs an optimally-weighted combination of donors that closely matches New Orleans' pre-Katrina employment patterns.
-
 ```{python}
 #| label: fig-naive
 #| fig-cap: "Naive Comparison - New Orleans vs Donor Pool Average"
@@ -227,7 +226,6 @@ config_diagplot = {
 }
 sc_diagplot([config_diagplot])
 ```
-
 {\small 
 *Note: New Orleans (black line) versus simple average of 146 donor MSAs (blue line). Gray lines show individual donor pool MSAs. Vertical dashed line indicates Hurricane Katrina (August 2005).*
 }
@@ -235,6 +233,7 @@ sc_diagplot([config_diagplot])
 \addcontentsline{toc}{subsubsection}{Figure 1: Naive Comparison}
 
 ## Pre-Treatment Fit and Method Selection
+
 The Two-Step algorithm selected the Modified Synthetic Control MSC(c) method based on superior pre-treatment fit. Table 1 reports key diagnostics: pre-treatment RMSE of 0.663 and R-squared of 0.766, showing that the MSC(c) method captured approximately 77% of variation in New Orleans employment growth before the hurricane. The post-treatment RMSE of 12.847 reflects the large treatment effect rather than poor model performance.
 
 **Table 1: Model Fit Diagnostics**
