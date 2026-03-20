@@ -8,7 +8,7 @@ format:
     linestretch: 2.0
     pdf-engine: xelatex
     toc: false
-    toc-depth: 3
+    toc-depth: 4
     number-sections: true
     keep-tex: true
  
@@ -158,8 +158,6 @@ Third, policy endogeneity arises because the estimated effects reflect both the 
 
 # Results and Discussion
 
-## Preliminary Analysis
-Before presenting the synthetic control results, Figure 1 shows a naive comparison of New Orleans employment growth against the simple average of all 146 donor MSAs. The gray lines show individual donor trajectories, revealing substantial heterogeneity across metropolitan areas. The blue line represents the unweighted average of donors, which provides a poor counterfactual for New Orleans due to this heterogeneity. Some donor MSAs experienced strong growth while others stagnated, and simple averaging fails to account for New Orleans' specific pre-treatment characteristics. This motivates the synthetic control approach, which constructs an optimally-weighted combination of donors that closely matches New Orleans' pre-Katrina employment patterns.
 ```{python}
 #| echo: false
 #| output: false
@@ -206,6 +204,10 @@ full_index = pre_index.append(post_index)
 
 gap = y_obs - y_cf
 ```
+
+## Preliminary Analysis
+Before presenting the synthetic control results, Figure 1 shows a naive comparison of New Orleans employment growth against the simple average of all 146 donor MSAs. The gray lines show individual donor trajectories, revealing substantial heterogeneity across metropolitan areas. The blue line represents the unweighted average of donors, which provides a poor counterfactual for New Orleans due to this heterogeneity. Some donor MSAs experienced strong growth while others stagnated, and simple averaging fails to account for New Orleans' specific pre-treatment characteristics. This motivates the synthetic control approach, which constructs an optimally-weighted combination of donors that closely matches New Orleans' pre-Katrina employment patterns.
+
 ```{python}
 #| label: fig-naive
 #| fig-cap: "Naive Comparison - New Orleans vs Donor Pool Average"
@@ -225,7 +227,12 @@ config_diagplot = {
 }
 sc_diagplot([config_diagplot])
 ```
+
+{\small 
 *Note: New Orleans (black line) versus simple average of 146 donor MSAs (blue line). Gray lines show individual donor pool MSAs. Vertical dashed line indicates Hurricane Katrina (August 2005).*
+}
+
+\addcontentsline{toc}{subsubsection}{Figure 1: Naive Comparison}
 
 ## Pre-Treatment Fit and Method Selection
 The Two-Step algorithm selected the Modified Synthetic Control MSC(c) method based on superior pre-treatment fit. Table 1 reports key diagnostics: pre-treatment RMSE of 0.663 and R-squared of 0.766, showing that the MSC(c) method captured approximately 77% of variation in New Orleans employment growth before the hurricane. The post-treatment RMSE of 12.847 reflects the large treatment effect rather than poor model performance.
@@ -245,7 +252,11 @@ The Two-Step algorithm selected the Modified Synthetic Control MSC(c) method bas
 | 95% Confidence Interval        | [-1.75, -0.004]           |
 | P-value                        | 0.048                     |
 
+{\small 
 *Note: Diagnostics from Two-Step Synthetic Control algorithm. MSC(c) is the selected Modified Synthetic Control method. Higher post-treatment RMSE reflects large treatment effect. ATT is average treatment effect on the treated over September 2005 - December 2025.*
+}
+
+\addcontentsline{toc}{subsubsection}{Table 1: Model Fit Diagnostics}
 
 Figure 2 displays the gap between actual New Orleans and synthetic control during 1991-2005, fluctuating tightly around zero throughout this extended window. This close pre-treatment match validates the identification assumption that the synthetic control provides a credible counterfactual for New Orleans.
 
@@ -271,10 +282,16 @@ ax.spines['right'].set_visible(False)
 plt.tight_layout()
 plt.show()
 ```
+
+{\small
 *Note: Gap between actual New Orleans employment growth and synthetic control during pre-treatment period (1991-2005). Gap fluctuates tightly around zero throughout 15-year baseline, validating the identification assumption and the quality of the synthetic control fit.*
+}
+
+\addcontentsline{toc}{subsubsection}{Figure 2: Pre-Treatment Fit Validation}
 
 ## Main Results: Treatment Effects
 Figure 3 presents observed versus synthetic control employment growth over the full study period. During the pre-treatment period through August 2005, both series track closely with minimal divergence. At the hurricane timing, there is immediate catastrophic separation between the two lines.
+
 ```{python}
 #| label: fig-observed
 #| fig-cap: "Observed vs Synthetic Control"
@@ -296,9 +313,15 @@ plt.title("Causal Impact on Year over Year_Non Farm Employment", fontsize=16, we
 plt.tight_layout()
 plt.show()
 ```
+
+{\small
 *Note: Year-over-year percentage change in total non-farm employment. The black solid line shows actual employment for New Orleans–Metairie, LA MSA, while the red solid line shows the synthetic control using MSC(c) method. The vertical gray dotted line indicates the timing of Hurricane Katrina (August 2005).*
+}
+
+\addcontentsline{toc}{subsubsection}{Figure 3: Observed vs Synthetic Control}
 
 Figure 4 shows the treatment effect as the gap between observed and synthetic New Orleans employment growth. The immediate impact in late 2005 was severe, with employment growth collapsing to approximately -33% year-over-year. This represents one of the largest employment shocks to a U.S. metropolitan area in modern history, indicating that New Orleans lost roughly one-third of its employment base compared to the previous year.
+
 ```{python}
 #| label: fig-treatment
 #| fig-cap: "Estimated Treatment Effect"
@@ -332,15 +355,20 @@ plt.title("Estimated Treatment Effect — Hurricane Katrina", fontsize=16)
 plt.tight_layout()
 plt.show()
 ```
+
+{\small
 *Note: Gap between observed and synthetic New Orleans employment growth (1991-2025). Negative values indicate employment losses relative to counterfactual. Red dashed line at zero. Vertical line indicates Hurricane Katrina (August 2005).*
+}
+
+\addcontentsline{toc}{subsubsection}{Figure 4: Estimated Treatment Effect}
 
 Following this catastrophic impact, employment growth began recovering. The gap narrowed substantially through 2006 and 2007, showing gradual convergence back toward the counterfactual. By 2010-2015, the gap had narrowed to near-zero levels on average, indicating substantial recovery of growth rates. The average treatment effect on the treated over the entire post-treatment period (September 2005 through December 2025) is -0.84 percentage points (95% confidence interval: \[-1.75, -0.004\], p = 0.048).
 
 The overall average treatment effect of -0.84 percentage points represents the mean employment growth deficit over the full 20-year post-Katrina period. This relatively small magnitude compared to the catastrophic peak impact of -33 percentage points reflects substantial long-run recovery. The employment growth gap narrowed considerably after 2009, with growth rates approaching the counterfactual by the mid-2010s. The 95% confidence interval barely excludes zero, indicating marginal statistical significance. This suggests persistent but small employment growth deficits even two decades after the hurricane.
 
 ## Employment Levels: A Complementary Perspective
-
 Figure 5 presents total nonfarm employment in levels (thousands of workers) rather than year-over-year growth rates, providing a complementary perspective on recovery. The black line shows actual New Orleans employment, while the red line shows the synthetic control.
+
 ```{python}
 #| label: Employment Levels
 #| fig-cap: "Observed vs Synthetic employment rate"
@@ -406,7 +434,12 @@ plt.title("Total Nonfarm Employment Rate: Observed vs Synthetic Control", fontsi
 plt.tight_layout()
 plt.show()
 ```
+
+{\small
 *Note: Total nonfarm employment (thousands). Black line shows observed New Orleans; red line shows synthetic control. Employment fell from 575,000 pre-Katrina to 365,000, recovered to 480,000 by 2025. Counterfactual employment would have been approximately 650,000, indicating a persistent 26% deficit.*
+}
+
+\addcontentsline{toc}{subsubsection}{Figure 5: Observed vs Synthetic Employment Rate}
 
 Pre-Katrina, New Orleans employment was approximately 575,000. The hurricane caused an immediate collapse to approximately 365,000, representing a loss of over 200,000 jobs—more than one-third of the employment base. Employment recovered steadily through 2007, reaching approximately 490,000, before stalling during the 2008-2009 Great Recession.
 
@@ -421,6 +454,7 @@ This levels analysis reveals a critical distinction from the growth rate analysi
 ## In-Time Placebo Test
 
 Figure 6 presents results from the in-time placebo test, where treatment is artificially placed in August 2003, approximately 2 years before the actual hurricane. At the fake treatment time shown by the dashed vertical line, there is no systematic employment collapse. The actual New Orleans line continues tracking the synthetic control reasonably well through 2003 and 2004 with no catastrophic break at the placebo timing.
+
 ```{python}
 #| label: fig-placebo
 #| fig-cap: "In-Time Placebo Test"
@@ -467,7 +501,12 @@ plt.title("Causal Impact on Year-over-Year_Non Farm Emploment", fontsize=16, wei
 plt.tight_layout()
 plt.show()
 ```
+
+{\small 
 *Note: Validation test with placebo treatment placed in 2003 (dashed vertical line). Gap shows no systematic collapse at placebo timing, with catastrophic impact appearing only at actual hurricane time in 2005.*
+}
+
+\addcontentsline{toc}{subsubsection}{Figure 6: In-Time Placebo Test}
 
 However, at the actual Hurricane Katrina timing in late 2005, the massive employment collapse appears. This temporal specificity validates the causal interpretation. If the Two-Step Synthetic Control method were simply detecting spurious patterns or pre-existing differential trends, we would expect to observe similar treatment effects at the fake treatment time in 2003. The fact that the catastrophic impact appears only when and where the hurricane actually occurred demonstrates that Hurricane Katrina caused the employment losses rather than these losses reflecting methodological artifacts or continuation of pre-existing trends.
 
@@ -481,7 +520,11 @@ The 30 placebo MSAs span diverse regions and economic structures, including majo
 
 Figure 7 presents the spaghetti plot showing treatment effect trajectories over time. The gray lines show 30 placebo MSAs, while the thick black line shows New Orleans. The placebo gaps oscillate around zero throughout the period with no systematic pattern. No placebo unit exhibits a trajectory remotely similar to New Orleans. In contrast, New Orleans shows a clear catastrophic drop at the August 2005 treatment timing, declining to approximately -30 percentage points, followed by gradual recovery.
 ![In-Space Placebo Test](In_Space_Placebo_SPAGHETTI_PLOT.png){width=100%}
+{\small
 *Note: In-space placebo test. Gray lines show 30 placebo MSAs; black line shows New Orleans. Placebo effects oscillate around zero while New Orleans exhibits a distinct catastrophic drop and gradual recovery. Permutation p-value = 0.16.*
+}
+
+\addcontentsline{toc}{subsubsection}{Figure 7: In-Space Placebo Test}
 
 The visual comparison is striking: New Orleans' trajectory stands out dramatically from the cloud of placebos. While placebo effects fluctuate randomly between approximately +20 and -15 percentage points over short windows, only New Orleans exhibits the sustained, severe negative effect persisting multiple years after 2005.
 
