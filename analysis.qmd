@@ -111,7 +111,7 @@ Figure 3: Observed vs Synthetic Control \dotfill \pageref{fig-observed}
 
 Figure 4: Estimated Treatment Effect \dotfill \pageref{fig-treatment}
 
-Figure 5: Observed vs Synthetic Employment Rate \dotfill \pageref{fig-employment-levels}
+Figure 5: Observed vs Synthetic Employment Levels \dotfill \pageref{fig-employment-levels}
 
 Figure 6: In-Time Placebo Test \dotfill \pageref{fig-placebo}
 
@@ -183,12 +183,12 @@ Third, policy endogeneity arises because the estimated effects reflect both the 
 # Results and Discussion
 ## Preliminary Analysis
 Before presenting the synthetic control results, Figure 1 shows a naive comparison of New Orleans employment growth against the simple average of all 146 donor MSAs. The gray lines show individual donor trajectories, revealing substantial heterogeneity across metropolitan areas. The blue line represents the unweighted average of donors, which provides a poor counterfactual for New Orleans due to this heterogeneity. Some donor MSAs experienced strong growth while others stagnated, and simple averaging fails to account for New Orleans' specific pre-treatment characteristics. This motivates the synthetic control approach, which constructs an optimally-weighted combination of donors that closely matches New Orleans' pre-Katrina employment patterns.
+
 ```{python}
 #| label: fig-naive
 #| fig-cap: "Naive Comparison - New Orleans vs Donor Pool Average"
 #| fig-width: 8
 #| fig-height: 5
-#| fig-pos: 'H'
 
 import pandas as pd
 import numpy as np
@@ -947,7 +947,7 @@ plt.show()
 
 ## Python code generating the in-space placebo figure
 
-#| label: fig-inspace-placebo
+#| label: fig-inspace
 #| fig-cap: "In-Space Placebo Test"
 #| fig-width: 11
 #| fig-height: 7
