@@ -161,13 +161,52 @@ Third, policy endogeneity arises because the estimated effects reflect both the 
 ## Preliminary Analysis
 Before presenting the synthetic control results, Figure 1 shows a naive comparison of New Orleans employment growth against the simple average of all 146 donor MSAs. The gray lines show individual donor trajectories, revealing substantial heterogeneity across metropolitan areas. The blue line represents the unweighted average of donors, which provides a poor counterfactual for New Orleans due to this heterogeneity. Some donor MSAs experienced strong growth while others stagnated, and simple averaging fails to account for New Orleans' specific pre-treatment characteristics. This motivates the synthetic control approach, which constructs an optimally-weighted combination of donors that closely matches New Orleans' pre-Katrina employment patterns.
 ```{python}
+#| echo: false
+#| output: false
+#| label: setup-analysis
+
 import pandas as pd
 import numpy as np
 from mlsynth import TSSC
 import matplotlib.pyplot as plt
 
+# Load data
 df = pd.read_csv("Total_Non_Farm_Employment_Katrina_2025.csv")
 
+# Run TSSC analysis ONCE
+config = {
+    "df": df,
+    "outcome": "YoY_NFE",
+    "treat": "Katrina",
+    "unitid": "MSA Title",
+    "time": "time",
+    "display_graphs": False,
+    "save": False,
+    "counterfactual_color": ["red", "blue"]
+}
+
+Results = TSSC(config).fit()
+y_obs = Results[3].raw_results['Vectors']['Observed Unit']
+y_cf = Results[3].raw_results['Vectors']['Counterfactual']
+post_periods = Results[3].raw_results['Fit']['Post-Periods']
+pre_periods = Results[3].raw_results['Fit']['Pre-Periods']
+
+split_date = "2005-08"
+pre_index = pd.date_range(
+    end=pd.Period(split_date, freq="M").start_time - pd.offsets.MonthEnd(1),
+    periods=pre_periods,
+    freq="ME"
+)
+post_index = pd.date_range(
+    start=pd.Period(split_date, freq="M").start_time,
+    periods=post_periods,
+    freq="ME"
+)
+full_index = pre_index.append(post_index)
+
+gap = y_obs - y_cf
+```
+```{python}
 #| label: fig-naive
 #| fig-cap: "Naive Comparison - New Orleans vs Donor Pool Average"
 #| fig-width: 10
@@ -241,43 +280,6 @@ Figure 3 presents observed versus synthetic control employment growth over the f
 #| fig-cap: "Observed vs Synthetic Control"
 #| fig-width: 10
 #| fig-height: 6
-
-import pandas as pd
-import numpy as np
-from mlsynth import TSSC
-import matplotlib.pyplot as plt
-
-df = pd.read_csv("Total_Non_Farm_Employment_Katrina_2025.csv")
-
-config = {
-    "df": df,
-    "outcome": "YoY_NFE",
-    "treat": "Katrina",
-    "unitid": "MSA Title",
-    "time": "time",
-    "display_graphs": False,
-    "save": False,
-    "counterfactual_color": ["red", "blue"]
-}
-
-Results = TSSC(config).fit()
-y_obs = Results[3].raw_results['Vectors']['Observed Unit']
-y_cf = Results[3].raw_results['Vectors']['Counterfactual']
-post_periods = Results[3].raw_results['Fit']['Post-Periods']
-pre_periods = Results[3].raw_results['Fit']['Pre-Periods']
-
-split_date = "2005-08"
-pre_index = pd.date_range(
-    end=pd.Period(split_date, freq="M").start_time - pd.offsets.MonthEnd(1),
-    periods=pre_periods,
-    freq="ME"
-)
-post_index = pd.date_range(
-    start=pd.Period(split_date, freq="M").start_time,
-    periods=post_periods,
-    freq="ME"
-)
-full_index = pre_index.append(post_index)
 
 fig, ax = plt.subplots(figsize=(10, 6))
 ax.plot(full_index, y_obs, label="New Orleans-Metairie, LA MSA (Observed)", linewidth=2.5, color='black')
