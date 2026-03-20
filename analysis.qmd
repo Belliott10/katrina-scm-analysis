@@ -161,6 +161,13 @@ Third, policy endogeneity arises because the estimated effects reflect both the 
 ## Preliminary Analysis
 Before presenting the synthetic control results, Figure 1 shows a naive comparison of New Orleans employment growth against the simple average of all 146 donor MSAs. The gray lines show individual donor trajectories, revealing substantial heterogeneity across metropolitan areas. The blue line represents the unweighted average of donors, which provides a poor counterfactual for New Orleans due to this heterogeneity. Some donor MSAs experienced strong growth while others stagnated, and simple averaging fails to account for New Orleans' specific pre-treatment characteristics. This motivates the synthetic control approach, which constructs an optimally-weighted combination of donors that closely matches New Orleans' pre-Katrina employment patterns.
 ```{python}
+import pandas as pd
+import numpy as np
+from mlsynth import TSSC
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("Total_Non_Farm_Employment_Katrina_2025.csv")
+
 #| label: fig-naive
 #| fig-cap: "Naive Comparison - New Orleans vs Donor Pool Average"
 #| fig-width: 10
