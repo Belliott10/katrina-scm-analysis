@@ -266,7 +266,6 @@ sc_diagplot([config_diagplot])
 The Two-Step algorithm selected the Modified Synthetic Control MSC(c) method based on superior pre-treatment fit. Table 1 reports key diagnostics: pre-treatment RMSE of 0.663 and R-squared of 0.766, showing that the MSC(c) method captured approximately 77% of variation in New Orleans employment growth before the hurricane. The post-treatment RMSE of 12.847 reflects the large treatment effect rather than poor model performance.
 
 **Table 1: Model Fit Diagnostics**
-
 | Metric                         | Value                     |
 |--------------------------------|---------------------------|
 | Pre-treatment RMSE             | 0.663                     |
@@ -394,7 +393,7 @@ The overall average treatment effect of -0.84 percentage points represents the m
 Figure 5 presents total nonfarm employment in levels (thousands of workers) rather than year-over-year growth rates, providing a complementary perspective on recovery. The black line shows actual New Orleans employment, while the red line shows the synthetic control.
 
 ```{python}
-#| label: #| label: fig-employment-levels
+#| label: fig-employment-levels
 #| fig-cap: "Observed vs Synthetic employment rate"
 #| fig-width: 10
 #| fig-height: 6
