@@ -182,15 +182,16 @@ Third, policy endogeneity arises because the estimated effects reflect both the 
 
 # Results and Discussion
 ## Preliminary Analysis
-Before presenting the synthetic control results, Figure 1 shows a naive comparison of New Orleans employment growth against the simple average of all 146 donor MSAs. The gray lines show individual donor trajectories, revealing substantial heterogeneity across metropolitan areas. The blue line represents the unweighted average of donors, which provides a poor counterfactual for New Orleans due to this heterogeneity. Some donor MSAs experienced strong growth while others stagnated, and simple averaging fails to account for New Orleans' specific pre-treatment characteristics. This motivates the synthetic control approach, which constructs an optimally-weighted combination of donors that closely matches New Orleans' pre-Katrina employment patterns.
+Before presenting the synthetic control results, Figure 1 shows a naive comparison of New Orleans employment growth against the simple average of all 146 donor MSAs. The gray lines show individual donor trajectories, revealing substantial heterogeneity across metropolitan areas. Individual MSAs exhibit widely varying employment growth rates, with some experiencing volatile fluctuations while others show more stable patterns.The blue line represents the unweighted average of donors, which provides a poor counterfactual for New Orleans due to this heterogeneity. 
+
+An unweighted average treats all donor MSAs as equally comparable to New Orleans, regardless of how similar their pre-treatment employment patterns actually were. Some donor MSAs experienced strong growth while others stagnated, and simple averaging fails to account for New Orleans' specific pre-treatment characteristics. This motivates the synthetic control approach, which constructs an optimally-weighted combination of donors that closely matches New Orleans' pre-Katrina employment patterns. By selecting donors with similar pre-treatment trajectories and assigning them optimal weights, the synthetic control method produces a more credible counterfactual than simple averaging.
 
 ```{python}
 #| label: fig-naive
 #| fig-cap: "Naive Comparison - New Orleans vs Donor Pool Average"
-#| fig-width: 7.5
-#| fig-height: 5
+#| fig-width: 10
+#| fig-height: 6
 #| fig-pos: 'H'
-#| fig-align: center
 
 import pandas as pd
 import numpy as np
@@ -203,7 +204,7 @@ df = pd.read_csv("Total_Non_Farm_Employment_Katrina_2025.csv")
 # Run TSSC analysis ONCE
 config = {
     "df": df,
-    "outcome": "YoY_NFE",
+    "outcome": "Year over Year_Non Farm Employment",
     "treat": "Katrina",
     "unitid": "MSA Title",
     "time": "time",
