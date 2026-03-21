@@ -182,7 +182,7 @@ Third, policy endogeneity arises because the estimated effects reflect both the 
 
 # Results and Discussion
 ## Preliminary Analysis
-Before presenting the synthetic control results, Figure 1 shows a naive comparison of New Orleans employment growth against the simple average of all 146 donor MSAs. The gray lines show individual donor trajectories, revealing substantial heterogeneity across metropolitan areas. Individual MSAs exhibit widely varying employment growth rates, with some experiencing volatile fluctuations while others show more stable patterns.The blue line represents the unweighted average of donors, which provides a poor counterfactual for New Orleans due to this heterogeneity. 
+Before presenting the synthetic control results, Figure 1 shows a naive comparison of New Orleans employment growth against the simple average of all 146 donor MSAs. Year-over-year (YoY) employment growth captures the annual percentage change in total non-farm employment (NFE). The gray lines show individual donor trajectories, revealing substantial heterogeneity across metropolitan areas. Individual MSAs exhibit widely varying employment growth rates, with some experiencing volatile fluctuations while others show more stable patterns.The blue line represents the unweighted average of donors, which provides a poor counterfactual for New Orleans due to this heterogeneity. 
 
 An unweighted average treats all donor MSAs as equally comparable to New Orleans, regardless of how similar their pre-treatment employment patterns actually were. Some donor MSAs experienced strong growth while others stagnated, and simple averaging fails to account for New Orleans' specific pre-treatment characteristics. This motivates the synthetic control approach, which constructs an optimally-weighted combination of donors that closely matches New Orleans' pre-Katrina employment patterns. By selecting donors with similar pre-treatment trajectories and assigning them optimal weights, the synthetic control method produces a more credible counterfactual than simple averaging.
 
@@ -246,10 +246,6 @@ config_diagplot = {
     "save": False,
 }
 sc_diagplot([config_diagplot])
-
-fig = plt.gcf()  # Get current figure
-ax = fig.axes[0]  # Get first (and probably only) axis
-ax.set_ylabel("Year-over-Year Employment Growth (%)", fontsize=11)
 ```
 \footnotesize
 
