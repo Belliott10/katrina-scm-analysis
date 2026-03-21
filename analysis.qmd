@@ -187,8 +187,10 @@ Before presenting the synthetic control results, Figure 1 shows a naive comparis
 ```{python}
 #| label: fig-naive
 #| fig-cap: "Naive Comparison - New Orleans vs Donor Pool Average"
-#| fig-width: 8
+#| fig-width: 7.5
 #| fig-height: 5
+#| fig-pos: 'H'
+#| fig-align: center
 
 import pandas as pd
 import numpy as np
