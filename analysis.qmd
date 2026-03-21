@@ -247,10 +247,9 @@ config_diagplot = {
 }
 sc_diagplot([config_diagplot])
 
-ax = plt.gca()
+fig = plt.gcf()  # Get current figure
+ax = fig.axes[0]  # Get first (and probably only) axis
 ax.set_ylabel("Year-over-Year Employment Growth (%)", fontsize=11)
-plt.tight_layout()
-plt.show()
 ```
 \footnotesize
 
