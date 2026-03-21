@@ -204,7 +204,7 @@ df = pd.read_csv("Total_Non_Farm_Employment_Katrina_2025.csv")
 # Run TSSC analysis ONCE
 config = {
     "df": df,
-    "outcome": "Year over Year_Non Farm Employment",
+    "outcome": "YoY_NFE",
     "treat": "Katrina",
     "unitid": "MSA Title",
     "time": "time",
@@ -246,6 +246,11 @@ config_diagplot = {
     "save": False,
 }
 sc_diagplot([config_diagplot])
+
+ax = plt.gca()
+ax.set_ylabel("Year-over-Year Employment Growth (%)", fontsize=11)
+plt.tight_layout()
+plt.show()
 ```
 \footnotesize
 
