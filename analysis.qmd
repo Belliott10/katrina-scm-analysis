@@ -123,8 +123,7 @@ Figure 7: In-Space Placebo Test \dotfill \pageref{fig-inspace}
  
 \begin{abstract}
 \setstretch{1.5}
-This paper examines the causal impact of Hurricane Katrina on employment in the New Orleans metropolitan area using the Two-Step Synthetic Control (TSSC) method. Hurricane Katrina, which struck the Gulf Coast in August 2005, was one of the most devastating natural disasters in modern U.S. history, causing widespread displacement and labor market disruptions. Using monthly employment data from 1991 to 2025, I construct a synthetic control from 146 unaffected metropolitan statistical areas(MSA) that closely matches pre-Katrina New Orleans employment patterns. The TSSC algorithm selects the MSC(c) method as optimal based on pre-treatment fit. The analysis reveals catastrophic employment losses: an immediate 33\% year-over-year decline following the hurricane, with an average treatment effect of -0.84 percentage points over the full 20-year post-treatment period (2005-2025). The relatively small long-run average treatment effect compared to the catastrophic initial impact reflects substantial recovery of employment growth rates by the mid-2010s. However, employment levels analysis reveals incomplete recovery, with New Orleans employment remaining approximately 26\% below the counterfactual even in 2025. In-time and in-space placebo tests validate causality. This study contributes to disaster economics by analyzing aggregate MSA-level employment over an unprecedented 20-year post-disaster window, examining both growth rates and levels, and addressing potential confounds including the COVID-19 pandemic. Results indicate substantial but incomplete long-run recovery, with important implications for disaster recovery policy.
- 
+This paper examines the causal impact of Hurricane Katrina on employment in the New Orleans metropolitan area using the Two-Step Synthetic Control (TSSC) method. Hurricane Katrina, which struck the Gulf Coast in August 2005, was one of the most devastating natural disasters in modern U.S. history, causing widespread displacement and labor market disruptions. Using monthly employment data from 1991 to 2025, I construct a synthetic control from 146 unaffected metropolitan statistical areas(MSA) that closely matches pre-Katrina New Orleans employment patterns. The analysis reveals catastrophic employment losses: an immediate 33% year-over-year decline in employment growth rate following the hurricane, with an average treatment effect of -0.84 percentage points on employment growth over the full 20-year post-treatment period (2005-2025). The relatively small long-run average treatment effect compared to the catastrophic initial impact reflects substantial recovery of employment growth rates by the mid-2010s. However, employment levels analysis reveals incomplete recovery, with New Orleans employment remaining approximately 26\% below the counterfactual even in 2025. 
 \vspace{0.15cm}
  
 \textit{Keywords:} Hurricane Katrina, natural disasters, synthetic control method, employment impacts, disaster recovery, New Orleans, long-run effects, Two-Step Synthetic Control
@@ -154,11 +153,22 @@ The extended 20-year post-treatment window (2005-2025) provides the longest obse
 # Data and Methodology
 ## Data
 The analysis uses monthly employment data from the Bureau of Labor Statistics (BLS) Local Area Unemployment Statistics (LAUS) program, covering U.S. metropolitan statistical areas (MSAs) from January 1991 through December 2025. The LAUS program provides comprehensive employment data for MSAs based on a combination of Current Population Survey estimates, unemployment insurance claims, and employment data from the Current Employment Statistics program. The outcome variable is year-over-year percentage change in total non-farm employment, which captures employment growth dynamics across all sectors and automatically removes seasonal patterns by comparing each month to the same month one year earlier. 
-The treated unit is the New Orleans–Metairie MSA, which was directly and severely impacted by Hurricane Katrina in August 2005. The donor pool consists of 146 other U.S. metropolitan statistical areas that were not directly exposed to Hurricane Katrina's destruction. MSAs in Louisiana (other than New Orleans), Mississippi, and Alabama that experienced direct hurricane impacts are excluded from the donor pool to ensure that control units were not themselves affected by the disaster. The pre-treatment period spans January 1991 through August 2005 (176 months), providing a lengthy baseline for matching. The post-treatment period covers September 2005 through December 2025 (244 months), allowing examination of immediate, medium-term, and long-run employment effects over a full 20-year recovery period.
-The resulting donor pool spans diverse regions and economic structures, from manufacturing-oriented MSAs like Cleveland and Dayton to energy-focused MSAs like Midland, Texas, providing substantial variation in economic characteristics while maintaining comparability through data-driven weight selection.
+The focal metropolitan area is the New Orleans–Metairie MSA, which was directly and severely impacted by Hurricane Katrina in August 2005. For comparison, the analysis uses 146 other U.S. metropolitan statistical areas that were not directly exposed to Hurricane Katrina's destruction. MSAs in Louisiana (other than New Orleans), Mississippi, and Alabama that experienced direct hurricane impacts are excluded to ensure that comparison units were not themselves affected by the disaster. The data spans January 1991 through December 2025, providing 176 months before the hurricane and 244 months afterward, allowing examination of immediate, medium-term, and long-run employment effects over a full 20-year recovery period.
+The 146 comparison MSAs span diverse regions and economic structures, from manufacturing-oriented MSAs like Cleveland and Dayton to energy-focused MSAs like Midland, Texas, providing substantial variation in economic characteristics.
 
 ## Empirical Strategy
-This analysis uses the Two-Step Synthetic Control (TSSC) method (Li & Shankar, 2023), which builds on the standard Synthetic Control Method (SCM; Abadie & Gardeazabal, 2003; Abadie, Diamond, & Hainmueller, 2010).SCM estimates the causal impact of an intervention by constructing a weighted combination of control units that best approximates the pre-treatment characteristics of the treated unit. The synthetic control finds the weight vector that minimizes the distance between New Orleans and the weighted average of donor MSAs in the pre-treatment period. 
+This analysis uses the Two-Step Synthetic Control (TSSC) method (Li & Shankar, 2023), which builds on the standard Synthetic Control Method (SCM; Abadie & Gardeazabal, 2003; Abadie, Diamond, & Hainmueller, 2010). SCM estimates the causal impact of an intervention by constructing a weighted combination of control units that best approximates the pre-treatment characteristics of the treated unit. The synthetic control finds the weight vector that minimizes the distance between New Orleans and the weighted average of donor MSAs in the pre-treatment period. 
+
+## The Synthetic Control Method
+The synthetic control method constructs an artificial comparison unit by taking a weighted average of control units that were not affected by the treatment. Formally, suppose we observe $J+1$ units over $T$ time periods, where unit 1 is the treated unit (New Orleans) and units $j = 2, \ldots, J+1$ are potential controls (other MSAs). Let $Y_{it}$ denote the outcome for unit $i$ at time $t$, and let $T_0$ denote the time of treatment (Hurricane Katrina). 
+
+The synthetic control is defined as:
+$$\hat{Y}_{1t}^{SC} = \sum_{j=2}^{J+1} w_j Y_{jt}$$
+
+where $w_j \geq 0$ are non-negative weights that sum to one: $\sum_{j=2}^{J+1} w_j = 1$. These weights are chosen to minimize the distance between the treated unit's pre-treatment characteristics and the weighted average of control units. The treatment effect is then estimated as:
+$$\hat{\tau}_{1t} = Y_{1t} - \hat{Y}_{1t}^{SC}$$
+
+for periods after the hurricane ($t > T_0$). The key assumption is that absent Hurricane Katrina, New Orleans would have evolved similarly to the synthetic control.
 
 ## The Two-Step Synthetic Control Method (TSSC)
 TSSC method developed by Li and Shankar (2023) addresses how to select among multiple synthetic control estimators to balance reducing bias and increasing efficiency. The standard SC method imposes three restrictions: (1) zero intercept, (2) weights sum to one, and (3) non-negative weights. Modified Synthetic Control (MSC) methods relax some restrictions. MSC(a) relaxes restriction (1), MSC(b) relaxes restriction (2), and MSC(c) relaxes both (1) and (2), retaining only non-negativity.
@@ -234,18 +244,42 @@ full_index = pre_index.append(post_index)
 
 gap = y_obs - y_cf
 
-from mlsynth.utils.helperutils import sc_diagplot
+# PLOT FOR FIGURE 1
+treated_unit = "New Orleans-Metairie, LA MSA"
+donor_data = df[df["MSA Title"] != treated_unit]
+donors = donor_data["MSA Title"].unique()
 
-config_diagplot = {
-    "df": df,
-    "outcome": "YoY_NFE",
-    "treat": "Katrina",
-    "unitid": "MSA Title",
-    "time": "time",
-    "display_graphs": True,
-    "save": False,
-}
-sc_diagplot([config_diagplot])
+fig, ax = plt.subplots(figsize=(10, 6))
+
+# Plot individual donors (gray lines)
+for donor in donors:
+    donor_df = donor_data[donor_data["MSA Title"] == donor].sort_values("date")
+    ax.plot(donor_df["date"], donor_df["YoY_NFE"], color="lightgray", linewidth=0.5, alpha=0.5)
+
+# Calculate and plot donor pool mean (blue line)
+donor_mean = donor_data.groupby("date")["YoY_NFE"].mean().reset_index()
+ax.plot(donor_mean["date"], donor_mean["YoY_NFE"], color="blue", linewidth=2.5, label="Donor Pool Mean")
+
+# Plot New Orleans (black line)
+nola_df = df[df["MSA Title"] == treated_unit].sort_values("date")
+ax.plot(nola_df["date"], nola_df["YoY_NFE"], color="black", linewidth=2.5, label="New Orleans-Metairie, LA MSA")
+
+# Add vertical line for Katrina
+ax.axvline(x=pd.to_datetime("2005-08-01"), color="gray", linestyle="--", linewidth=2, label="Hurricane Katrina (Aug 2005)")
+
+# Format axes
+ax.set_xlabel("Date", fontsize=11)
+ax.set_ylabel("Year-over-Year Non-Farm Employment Growth (%)", fontsize=11)
+ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
+ax.xaxis.set_major_locator(mdates.YearLocator(5))
+ax.set_title("Naive Comparison - New Orleans vs Donor Pool Average)", fontsize=14, fontweight='bold')
+ax.legend(fontsize=10)
+ax.grid(alpha=0.3)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+
+plt.tight_layout()
+plt.show()
 ```
 \footnotesize
 
@@ -332,7 +366,7 @@ ax.legend(fontsize=10)
 ax.grid(alpha=0.3)
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
-plt.title("Causal Impact on Year over Year_Non Farm Employment", fontsize=16, weight="bold")
+plt.title("Causal Impact: Observed vs Synthetic Control", fontsize=16, weight="bold")
 plt.tight_layout()
 plt.show()
 ```
@@ -374,7 +408,7 @@ peak_value = float(np.array(gap)[peak_idx].item())
 # Convert the date to a standard format for the PDF plot
 peak_date = full_index[peak_idx].to_pydatetime()
 
-plt.title("Estimated Treatment Effect — Hurricane Katrina", fontsize=16)
+plt.title("Estimated Treatment Effect", fontsize=16)
 plt.tight_layout()
 plt.show()
 ```
@@ -452,7 +486,7 @@ ax.set_ylabel("Total Nonfarm Employment (Thousands)")
 ax.legend()
 ax.grid(alpha=0.3)
 
-plt.title("Total Nonfarm Employment Rate: Observed vs Synthetic Control", fontsize=16)
+plt.title("Observed vs Synthetic Control Employment Rate", fontsize=16)
 plt.tight_layout()
 plt.show()
 ```
@@ -521,7 +555,7 @@ ax.legend(fontsize=9, loc='best')
 ax.grid(alpha=0.3)
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
-plt.title("Causal Impact on Year-over-Year_Non Farm Emploment", fontsize=16, weight="bold")
+plt.title("In-Time Placebo Test: Causal Impact on Year-over-Year_Non Farm Emploment", fontsize=16, weight="bold")
 plt.tight_layout()
 plt.show()
 ```
