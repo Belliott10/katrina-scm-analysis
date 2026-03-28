@@ -211,6 +211,7 @@ import matplotlib.pyplot as plt
 
 # Load data
 df = pd.read_csv("Total_Non_Farm_Employment_Katrina_2025.csv")
+df["date"] = pd.to_datetime(df["date"])
 
 # Run TSSC analysis ONCE
 config = {
