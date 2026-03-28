@@ -205,6 +205,7 @@ An unweighted average treats all donor MSAs as equally comparable to New Orleans
 
 import pandas as pd
 import numpy as np
+import matplotlib.dates as mdates
 from mlsynth import TSSC
 import matplotlib.pyplot as plt
 
@@ -272,7 +273,6 @@ ax.set_xlabel("Date", fontsize=11)
 ax.set_ylabel("Year-over-Year Non-Farm Employment Growth (%)", fontsize=11)
 ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
 ax.xaxis.set_major_locator(mdates.YearLocator(5))
-ax.set_title("Naive Comparison - New Orleans vs Donor Pool Average)", fontsize=14, fontweight='bold')
 ax.legend(fontsize=10)
 ax.grid(alpha=0.3)
 ax.spines['top'].set_visible(False)
@@ -330,7 +330,6 @@ ax.plot(pre_dates, pre_gap, color="black", linewidth=2.5, label="Gap (Pre-Treatm
 ax.axhline(0, color="red", linestyle="--", linewidth=1.5, alpha=0.7)
 ax.set_xlabel("Date", fontsize=11)
 ax.set_ylabel("Gap (Percentage Points)", fontsize=11)
-ax.set_title("Pre-Treatment Fit Validation (1991-2005)", fontsize=13, fontweight='bold')
 ax.legend(fontsize=10)
 ax.grid(alpha=0.3)
 ax.spines['top'].set_visible(False)
@@ -366,7 +365,6 @@ ax.legend(fontsize=10)
 ax.grid(alpha=0.3)
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
-plt.title("Causal Impact: Observed vs Synthetic Control", fontsize=16, weight="bold")
 plt.tight_layout()
 plt.show()
 ```
@@ -408,7 +406,6 @@ peak_value = float(np.array(gap)[peak_idx].item())
 # Convert the date to a standard format for the PDF plot
 peak_date = full_index[peak_idx].to_pydatetime()
 
-plt.title("Estimated Treatment Effect", fontsize=16)
 plt.tight_layout()
 plt.show()
 ```
@@ -486,7 +483,7 @@ ax.set_ylabel("Total Nonfarm Employment (Thousands)")
 ax.legend()
 ax.grid(alpha=0.3)
 
-plt.title("Observed vs Synthetic Control Employment Rate", fontsize=16)
+
 plt.tight_layout()
 plt.show()
 ```
@@ -555,7 +552,7 @@ ax.legend(fontsize=9, loc='best')
 ax.grid(alpha=0.3)
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
-plt.title("In-Time Placebo Test: Causal Impact on Year-over-Year_Non Farm Emploment", fontsize=16, weight="bold")
+
 plt.tight_layout()
 plt.show()
 ```
