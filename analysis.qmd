@@ -160,14 +160,12 @@ The 146 comparison MSAs span diverse regions and economic structures, from manuf
 This analysis uses the Two-Step Synthetic Control (TSSC) method (Li & Shankar, 2023), which builds on the standard Synthetic Control Method (SCM; Abadie & Gardeazabal, 2003; Abadie, Diamond, & Hainmueller, 2010). SCM estimates the causal impact of an intervention by constructing a weighted combination of control units that best approximates the pre-treatment characteristics of the treated unit. The synthetic control finds the weight vector that minimizes the distance between New Orleans and the weighted average of donor MSAs in the pre-treatment period. 
 
 ## The Synthetic Control Method
-The synthetic control method constructs an artificial comparison unit by taking a weighted average of control units that were not affected by the treatment. Formally, suppose we observe $J+1$ units over $T$ time periods, where unit 1 is the treated unit (New Orleans) and units $j = 2, \ldots, J+1$ are potential controls (other MSAs). Let $Y_{it}$ denote the outcome for unit $i$ at time $t$, and let $T_0$ denote the time of treatment (Hurricane Katrina). 
-
+The synthetic control method constructs an artificial comparison unit by taking a weighted average of control units that were not affected by the treatment. These control units are commonly referred to as the **donor pool** in the synthetic control literature. 
+Formally, suppose we observe $J+1$ units over $T$ time periods, where unit 1 is the treated unit (New Orleans) and units $j = 2, \ldots, J+1$ are potential controls (other MSAs). Let $Y_{it}$ denote the outcome for unit $i$ at time $t$, and let $T_0$ denote the time of treatment (Hurricane Katrina). 
 The synthetic control is defined as:
-$$\hat{Y}_{1t}^{SC} = \sum_{j=2}^{J+1} w_j Y_{jt}$$
-
+$$\hat{Y}_{1t}^{SC} = \sum_{j=2}^{J+1} w_j Y_{jt}$$ 
 where $w_j \geq 0$ are non-negative weights that sum to one: $\sum_{j=2}^{J+1} w_j = 1$. These weights are chosen to minimize the distance between the treated unit's pre-treatment characteristics and the weighted average of control units. The treatment effect is then estimated as:
-$$\hat{\tau}_{1t} = Y_{1t} - \hat{Y}_{1t}^{SC}$$
-
+$$\hat{\tau}_{1t} = Y_{1t} - \hat{Y}_{1t}^{SC}$$ 
 for periods after the hurricane ($t > T_0$). The key assumption is that absent Hurricane Katrina, New Orleans would have evolved similarly to the synthetic control.
 
 ## The Two-Step Synthetic Control Method (TSSC)
