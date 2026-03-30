@@ -123,7 +123,9 @@ Figure 7: In-Space Placebo Test \dotfill \pageref{fig-inspace}
  
 \begin{abstract}
 \setstretch{1.5}
+
 This paper examines the causal impact of Hurricane Katrina on employment in the New Orleans metropolitan area using the Two-Step Synthetic Control (TSSC) method. Hurricane Katrina, which struck the Gulf Coast in August 2005, was one of the most devastating natural disasters in modern U.S. history, causing widespread displacement and labor market disruptions. Using monthly employment data from 1991 to 2025, I construct a synthetic control from 146 unaffected metropolitan statistical areas(MSA) that closely matches pre-Katrina New Orleans employment patterns. The analysis reveals catastrophic employment losses: an immediate 33% year-over-year decline in employment growth rate following the hurricane, with an average treatment effect of -0.84 percentage points on employment growth over the full 20-year post-treatment period (2005-2025). The relatively small long-run average treatment effect compared to the catastrophic initial impact reflects substantial recovery of employment growth rates by the mid-2010s. However, employment levels analysis reveals incomplete recovery, with New Orleans employment remaining approximately 26\% below the counterfactual even in 2025. 
+
 \vspace{0.15cm}
  
 \textit{Keywords:} Hurricane Katrina, natural disasters, synthetic control method, employment impacts, disaster recovery, New Orleans, long-run effects, Two-Step Synthetic Control
