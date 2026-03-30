@@ -672,6 +672,7 @@ Yun, S. D., & Kim, A. (2022). Economic impact of natural disasters: A myth or mi
 
 \newpage
 
+
 # Appendix: Code {.unnumbered}
 
 The following code was used to generate all empirical results and figures in the paper.
