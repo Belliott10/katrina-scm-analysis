@@ -1,13 +1,16 @@
 # Katrina SCM Analysis
 
-This repository contains my causal inference project analyzing the economic impact
-of Hurricane Katrina on total non-farm employment in the New Orleans metropolitan area
-using the Synthetic Control Method.
+This repository contains my M.A. Economics thesis, completed in partial fulfillment of the requirements for the degree at Georgia State University.
 
-Author: Bukola Elliott
-Date: Fall 2025
+The thesis examines the economic impact of Hurricane Katrina on total nonfarm employment in the New Orleans metropolitan area using the Synthetic Control Method (SCM).
 
-Files will include:
-- Data folder (`/data`)
-- Python analysis (`/analysis`)
-- GitHub Actions workflow for automation
+**Author:** Bukola Elliott  
+**Institution:** Georgia State University  
+**Degree:** M.A. Economics  
+**Date:** Spring 2026
+
+## Repository Structure
+
+- `data/` – Dataset used in the analysis.
+- `analysis/` – Python scripts and reproducible analysis.
+- `.github/workflows/` – GitHub Actions workflows for automation.
